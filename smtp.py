@@ -9,6 +9,7 @@ class SMTP:
     DEFAULT_PORT = 25
     is_debug = False
     sock = None
+    file = None
     helo_response = None
 
     def __init__(self, host='', port=0, is_debug=False):
@@ -41,17 +42,19 @@ class SMTP:
 
         return code, msg
 
-    def _create_socket(self, host, port):
+    @staticmethod
+    def _create_socket(host, port):
         return socket.create_connection((host, port))
 
     def getreply(self):
         response = []
+        code = -1
         if self.file is None:
             self.file = self.sock.makefile('r')
         while True:
             try:
                 line = self.file.readline()
-            except OSError as e:
+            except OSError:
                 self.close()
                 raise
 
@@ -89,7 +92,7 @@ class SMTP:
                 self.sock.sendall(s)
             except OSError as e:
                 self.close()
-                raise OSError
+                raise OSError('Unable to send {}'.format(e))
         else:
             raise OSError('Not connected, run connect() first')
 
