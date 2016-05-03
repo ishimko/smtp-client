@@ -73,7 +73,7 @@ class SMTP:
 
         msg = '\n'.join(response)
         if self.is_debug:
-            print('reply: \n\tcode: {}, \n\tmsg: {}'.format(code, msg))
+            print('reply: \n\tcode: {} \n\tmsg: {}'.format(code, msg))
 
         return code, msg
 
